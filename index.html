@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rock Paper Scissors</title>
+  <style>
+    body{
+      background-color: rgb(15, 15, 15);
+      color: white;
+    }
+    h3{
+      font-size: 30px;
+    }
+    img{
+      width: 50px;
+         }
+    .rock-button, .paper-button, .scissors-button{
+      border-radius: 80px;
+      background-color: transparent;
+      border: 3px solid white;
+      width: 120px;
+      height: 120px;
+       }
+       .reset{
+        color: white;
+        background-color: transparent;
+        border: 3px solid white;
+        padding: 5px 5px 5px 5px ;
+
+
+       }
+       .game-result{
+        font-size: 20px;
+        font-weight: bold;
+       }
+  </style>
+</head>
+<body>
+  <h3>Rock Paper Scissors</h3>
+  <button onclick="play_game('rock');" class="rock-button"><img src="crazyidea/rock-emoji.png" alt="rock"></button>
+  <button onclick="play_game('paper');" class="paper-button"><img src="crazyidea/paper-emoji.png" alt="paper"></button>
+  <button onclick="play_game('scissors');" class="scissors-button"><img src="crazyidea/scissors-emoji.png" alt="scissors"></button>
+  <p class="game-result"></p>
+  <p class="moves"></p>
+  <p class="score-counter"></p>
+  <button onclick="
+  counter.wins = 0;
+  counter.losses = 0;
+  counter.tie = 0;
+  localStorage.removeItem('score');
+  document.querySelector('.score-counter').innerHTML = `Wins: ${counter.wins}, Losses: ${counter.losses}, Ties:${counter.tie}`;
+  document.querySelector('.game-result').innerHTML = null;
+  document.querySelector('.moves').innerHTML = null;
+  " class="reset">Reset Score</button> 
+</body>
+<script>  
+  let counter = JSON.parse(localStorage.getItem('score')) || {
+      wins: 0,
+      losses: 0,
+      tie: 0
+    };
+  document.querySelector('.score-counter').innerHTML = `Wins: ${counter.wins}, Losses: ${counter.losses}, Ties:${counter.tie}`;
+
+  function play_game(playerMove) {
+    
+    const botMove = choose_bot_move();
+    let result = '';
+
+    if (playerMove === 'rock') {
+      if (botMove === 'rock') {
+        result = 'Tie';
+      } else if (botMove === 'paper') {
+        result = 'You Lost';
+      } else {
+        result = 'You Won';
+      }
+    } else if (playerMove === 'paper') {
+      if (botMove === 'rock') {
+        result = 'You Won';
+      } else if (botMove === 'paper') {
+        result = 'Tie';
+      } else {
+        result = 'You Lost';
+      }
+    } else {
+      if (botMove === 'rock') {
+        result = 'You Lost';
+      } else if (botMove === 'paper') {
+        result = 'You Won';
+      } else {
+        result = 'Tie';
+      }
+    }
+    if(result ==='You Won'){
+      counter.wins++;
+    }else if(result==='Tie'){
+      counter.tie++;
+    }else{
+      counter.losses++;
+    }
+    localStorage.setItem('score',JSON.stringify(counter));
+    document.querySelector('.game-result').innerHTML = result;
+    document.querySelector('.score-counter').innerHTML = `Wins: ${counter.wins}, Losses: ${counter.losses}, Ties:${counter.tie}`
+    document.querySelector('.moves').innerHTML = `Your move: <img src="crazyidea/${playerMove}-emoji.png" alt=""> Computer's Move: <img src="crazyidea/${botMove}-emoji.png" alt="">`;
+  }
+
+  function choose_bot_move() {
+    let randomNum = Math.random();
+    let botMove = '';
+
+    if (randomNum >= 1/3 && randomNum < 2/3) {
+      botMove = 'rock';
+    } else if (randomNum >= 0 && randomNum < 1/3) {
+      botMove = 'paper';
+    } else {
+      botMove = 'scissors';
+    }
+
+    return botMove;
+  }
+</script>
+</html>

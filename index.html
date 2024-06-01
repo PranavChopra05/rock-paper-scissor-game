@@ -22,13 +22,14 @@
       width: 120px;
       height: 120px;
        }
-       .reset{
+       .reset,.autoplay{
         color: white;
         background-color: transparent;
         border: 3px solid white;
         padding: 5px 5px 5px 5px ;
-
-
+       }
+       .reset:hover,.autoplay:hover{
+        cursor: pointer;
        }
        .game-result{
         font-size: 20px;
@@ -53,6 +54,7 @@
   document.querySelector('.game-result').innerHTML = null;
   document.querySelector('.moves').innerHTML = null;
   " class="reset">Reset Score</button> 
+  <button class="autoplay" onclick="autoPlay();">AutoPlay</button>
 </body>
 <script>  
   let counter = JSON.parse(localStorage.getItem('score')) || {
@@ -61,6 +63,24 @@
       tie: 0
     };
   document.querySelector('.score-counter').innerHTML = `Wins: ${counter.wins}, Losses: ${counter.losses}, Ties:${counter.tie}`;
+
+  let isAutoPlay = false;
+  let intervalId;
+  let autoButton = document.querySelector('.autoplay');
+  function autoPlay(){
+    if(!isAutoPlay){
+    intervalId = setInterval(function(){
+      const move = choose_bot_move();
+      play_game(move)
+    },2000);
+    isAutoPlay = true;
+    autoButton.innerHTML = 'Stop Playing';
+  } else{
+    clearInterval(intervalId);
+    isAutoPlay = false;
+    autoButton.innerHTML = 'AutoPlay';
+  }
+  }
 
   function play_game(playerMove) {
     
@@ -121,3 +141,4 @@
   }
 </script>
 </html>
+
